@@ -47,7 +47,11 @@ public class CurrentSeedVaultPanelController {
         if (client.getGameState() == GameState.LOGGED_IN) {
             updateDisplayForCurrentAccount();
         } else {
-            SwingUtilities.invokeLater(panel::displayNoDataMessage);
+            SwingUtilities.invokeLater(() -> {
+                panel.setNoDataMessage("Seed Vault Memory",
+                        "Log in to a character and open a seed vault to populate vault data for that character.");
+                panel.displayNoDataMessage();
+            });
         }
     }
 
@@ -81,7 +85,11 @@ public class CurrentSeedVaultPanelController {
             viewSave(existingSave.get());
         } else {
             latestDisplayedData = null;
-            SwingUtilities.invokeLater(panel::displayNoDataMessage);
+            SwingUtilities.invokeLater(() -> {
+                panel.setNoDataMessage("Seed Vault Memory",
+                        "Open a seed vault to populate vault data for this character.");
+                panel.displayNoDataMessage();
+            });
         }
     }
 
