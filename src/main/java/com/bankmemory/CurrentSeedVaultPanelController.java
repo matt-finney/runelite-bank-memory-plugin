@@ -131,8 +131,8 @@ public class CurrentSeedVaultPanelController {
 
     private static Comparator<ItemListEntry> seedVaultComparator() {
         return Comparator
-                .comparing((ItemListEntry e) -> isSapling(e.getName()) ? 1 : 0)
-                .thenComparing(e -> e.getName().toLowerCase());
+                .comparing((ItemListEntry e) -> isSapling(e.getItemName()) ? 1 : 0)
+                .thenComparing(e -> e.getItemName().toLowerCase());
     }
 
     private static boolean isSapling(String name) {
