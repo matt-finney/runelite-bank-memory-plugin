@@ -83,21 +83,23 @@ public class BankMemoryPlugin extends Plugin {
         clientToolbar.addNavigation(navButton);
 
         currentBankPanelController = injector.getInstance(CurrentBankPanelController.class);
-    BankViewPanel currentBankView = pluginPanel.getCurrentBankViewPanel();
-    clientThread.invokeLater(() -> currentBankPanelController.startUp(currentBankView));
+        BankViewPanel currentBankView = pluginPanel.getCurrentBankViewPanel();
+        clientThread.invokeLater(() -> currentBankPanelController.startUp(currentBankView));
 
-    currentSeedVaultPanelController = injector.getInstance(CurrentSeedVaultPanelController.class);
-    BankViewPanel currentSeedVaultView = pluginPanel.getCurrentSeedVaultViewPanel();
-    clientThread.invokeLater(() -> currentSeedVaultPanelController.startUp(currentSeedVaultView));
+        currentSeedVaultPanelController = injector.getInstance(CurrentSeedVaultPanelController.class);
+        BankViewPanel currentSeedVaultView = pluginPanel.getCurrentSeedVaultViewPanel();
+        clientThread.invokeLater(() -> currentSeedVaultPanelController.startUp(currentSeedVaultView));
 
         savedBanksPanelController = injector.getInstance(SavedBanksPanelController.class);
         savedBanksPanelController.startUp(pluginPanel.getSavedBanksTopPanel());
-    savedSeedVaultPanelController = injector.getInstance(SavedSeedVaultPanelController.class);
-    savedSeedVaultPanelController.startUp(pluginPanel.getSavedSeedVaultTopPanel());
-    diffPanelController = injector.getInstance(BankDiffPanelController.class);
-    diffPanelController.startUp(pluginPanel.getSavedBanksTopPanel().getDiffPanel());
-    seedVaultDiffPanelController = injector.getInstance(SeedVaultDiffPanelController.class);
-    seedVaultDiffPanelController.startUp(pluginPanel.getSavedSeedVaultTopPanel().getDiffPanel());
+        savedSeedVaultPanelController = injector.getInstance(SavedSeedVaultPanelController.class);
+        savedSeedVaultPanelController.startUp(pluginPanel.getSavedSeedVaultTopPanel());
+        
+        diffPanelController = injector.getInstance(BankDiffPanelController.class);
+        diffPanelController.startUp(pluginPanel.getSavedBanksTopPanel().getDiffPanel());
+        
+        seedVaultDiffPanelController = injector.getInstance(SeedVaultDiffPanelController.class);
+        seedVaultDiffPanelController.startUp(pluginPanel.getSavedSeedVaultTopPanel().getDiffPanel());
 
         overlayManager.add(itemOverlay);
     }
@@ -140,6 +142,7 @@ public class BankMemoryPlugin extends Plugin {
     }
 
     @Subscribe
+    @SuppressWarnings("deprecation")
     public void onItemContainerChanged(ItemContainerChanged event) {
         int containerId = event.getContainerId();
         BankWorldType worldType = BankWorldType.forWorld(client.getWorldType());
@@ -149,7 +152,7 @@ public class BankMemoryPlugin extends Plugin {
             ItemContainer bank = event.getItemContainer();
             dataStore.saveAsCurrentBank(BankSave.fromCurrentBank(worldType, accountIdentifier, bank, itemManager));
         }
-        if (containerId == com.bankmemory.util.Constants.SEED_VAULT_CONTAINER_ID) {
+        if (containerId == InventoryID.SEED_VAULT.getId()) {
             ItemContainer vault = event.getItemContainer();
             dataStore.saveAsCurrentSeedVault(BankSave.fromCurrentBank(worldType, accountIdentifier, vault, itemManager));
         }
