@@ -56,7 +56,7 @@ public class BanksListPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(listWrapper);
         add(scrollPane, BorderLayout.CENTER);
 
-        JButton compareBanks = new JButton("Compare bank saves");
+        JButton compareBanks = new JButton("Compare saves");
         compareBanks.addActionListener(a -> interactionListener.openBanksDiffPanel());
         add(compareBanks, BorderLayout.SOUTH);
     }
