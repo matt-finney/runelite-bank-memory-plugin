@@ -15,6 +15,7 @@ import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.Player;
+import net.runelite.api.ItemContainerID;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
@@ -51,8 +52,11 @@ public class BankMemoryPlugin extends Plugin {
     @Inject private OverlayManager overlayManager;
 
     private CurrentBankPanelController currentBankPanelController;
+    private CurrentSeedVaultPanelController currentSeedVaultPanelController;
     private SavedBanksPanelController savedBanksPanelController;
+    private SavedSeedVaultPanelController savedSeedVaultPanelController;
     private BankDiffPanelController diffPanelController;
+    private SeedVaultDiffPanelController seedVaultDiffPanelController;
     private NavigationButton navButton;
     private boolean displayNameRegistered = false;
 
@@ -80,13 +84,21 @@ public class BankMemoryPlugin extends Plugin {
         clientToolbar.addNavigation(navButton);
 
         currentBankPanelController = injector.getInstance(CurrentBankPanelController.class);
-        BankViewPanel currentBankView = pluginPanel.getCurrentBankViewPanel();
-        clientThread.invokeLater(() -> currentBankPanelController.startUp(currentBankView));
+    BankViewPanel currentBankView = pluginPanel.getCurrentBankViewPanel();
+    clientThread.invokeLater(() -> currentBankPanelController.startUp(currentBankView));
+
+    currentSeedVaultPanelController = injector.getInstance(CurrentSeedVaultPanelController.class);
+    BankViewPanel currentSeedVaultView = pluginPanel.getCurrentSeedVaultViewPanel();
+    clientThread.invokeLater(() -> currentSeedVaultPanelController.startUp(currentSeedVaultView));
 
         savedBanksPanelController = injector.getInstance(SavedBanksPanelController.class);
         savedBanksPanelController.startUp(pluginPanel.getSavedBanksTopPanel());
-        diffPanelController = injector.getInstance(BankDiffPanelController.class);
-        diffPanelController.startUp(pluginPanel.getSavedBanksTopPanel().getDiffPanel());
+    savedSeedVaultPanelController = injector.getInstance(SavedSeedVaultPanelController.class);
+    savedSeedVaultPanelController.startUp(pluginPanel.getSavedSeedVaultTopPanel());
+    diffPanelController = injector.getInstance(BankDiffPanelController.class);
+    diffPanelController.startUp(pluginPanel.getSavedBanksTopPanel().getDiffPanel());
+    seedVaultDiffPanelController = injector.getInstance(SeedVaultDiffPanelController.class);
+    seedVaultDiffPanelController.startUp(pluginPanel.getSavedSeedVaultTopPanel().getDiffPanel());
 
         overlayManager.add(itemOverlay);
     }
@@ -95,10 +107,15 @@ public class BankMemoryPlugin extends Plugin {
     protected void shutDown() {
         clientToolbar.removeNavigation(navButton);
         savedBanksPanelController.shutDown();
+        savedSeedVaultPanelController.shutDown();
         diffPanelController.shutDown();
+        seedVaultDiffPanelController.shutDown();
         currentBankPanelController = null;
+        currentSeedVaultPanelController = null;
         savedBanksPanelController = null;
+        savedSeedVaultPanelController = null;
         diffPanelController = null;
+        seedVaultDiffPanelController = null;
         overlayManager.remove(itemOverlay);
     }
 
@@ -125,12 +142,17 @@ public class BankMemoryPlugin extends Plugin {
 
     @Subscribe
     public void onItemContainerChanged(ItemContainerChanged event) {
-        if (event.getContainerId() != InventoryID.BANK.getId()) {
-            return;
-        }
+        int containerId = event.getContainerId();
         BankWorldType worldType = BankWorldType.forWorld(client.getWorldType());
-        ItemContainer bank = event.getItemContainer();
         String accountIdentifier = AccountIdentifier.fromAccountHash(client.getAccountHash());
-        dataStore.saveAsCurrentBank(BankSave.fromCurrentBank(worldType, accountIdentifier, bank, itemManager));
+
+        if (containerId == InventoryID.BANK.getId()) {
+            ItemContainer bank = event.getItemContainer();
+            dataStore.saveAsCurrentBank(BankSave.fromCurrentBank(worldType, accountIdentifier, bank, itemManager));
+        }
+        if (containerId == ItemContainerID.SEED_VAULT) {
+            ItemContainer vault = event.getItemContainer();
+            dataStore.saveAsCurrentSeedVault(BankSave.fromCurrentBank(worldType, accountIdentifier, vault, itemManager));
+        }
     }
 }
