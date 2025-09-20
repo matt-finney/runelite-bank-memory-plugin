@@ -3,7 +3,7 @@ package com.bankmemory;
 import com.bankmemory.bankview.ItemListEntry;
 import com.bankmemory.data.BankItem;
 import com.bankmemory.data.BankSave;
-import com.bankmemory.data.DataStoreUpdateListener;
+import com.bankmemory.data.AbstractDataStoreUpdateListener;
 import com.bankmemory.data.DisplayNameMapper;
 import com.bankmemory.data.PluginDataStore;
 import com.bankmemory.util.ClipboardActions;
@@ -164,7 +164,7 @@ public class SavedSeedVaultPanelController {
         }
     }
 
-    private class DataStoreListener implements DataStoreUpdateListener {
+    private class DataStoreListener extends AbstractDataStoreUpdateListener {
         @Override
         public void currentSeedVaultsListChanged() {
             updateCurrentVaultsList();
