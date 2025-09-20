@@ -8,6 +8,7 @@ import com.bankmemory.data.DisplayNameMapper;
 import com.bankmemory.data.PluginDataStore;
 import com.bankmemory.util.ClipboardActions;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -110,6 +111,7 @@ public class SavedSeedVaultPanelController {
             int haValue = ic.getHaPrice() * i.getQuantity();
             items.add(new ItemListEntry(ic.getName(), i.getQuantity(), icon, geValue, haValue));
         }
+        items.sort(seedVaultComparator());
         SwingUtilities.invokeLater(() -> {
             workingToOpen.set(false);
             saveForClipboardAction = foundSave;
@@ -182,5 +184,15 @@ public class SavedSeedVaultPanelController {
         public void displayNameMapUpdated() {
             updateCurrentVaultsList();
         }
+    }
+
+    private static Comparator<ItemListEntry> seedVaultComparator() {
+        return Comparator
+                .comparing((ItemListEntry e) -> isSapling(e.getName()) ? 1 : 0)
+                .thenComparing(e -> e.getName().toLowerCase());
+    }
+
+    private static boolean isSapling(String name) {
+        return name != null && name.toLowerCase().contains("sapling");
     }
 }
