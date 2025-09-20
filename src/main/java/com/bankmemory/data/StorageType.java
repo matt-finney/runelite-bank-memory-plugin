@@ -1,4 +1,4 @@
-package main.java.com.bankmemory.data;
+package com.bankmemory.data;
 
 public enum StorageType {
     BANK,

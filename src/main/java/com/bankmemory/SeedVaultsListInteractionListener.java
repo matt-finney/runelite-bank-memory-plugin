@@ -1,4 +1,4 @@
-package main.java.com.bankmemory;
+package com.bankmemory;
 
 public interface SeedVaultsListInteractionListener {
     void selectedToOpen(BanksListEntry save);
