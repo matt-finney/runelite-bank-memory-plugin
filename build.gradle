@@ -44,12 +44,3 @@ tasks.withType(JavaCompile) {
     options.release.set(11)
 }
 
-// Convenience task to run RuneLite with this plugin from the test source set
-tasks.register('runRuneLite', JavaExec) {
-    group = 'application'
-    description = 'Run RuneLite with this plugin (uses RuneLiteRunner)'
-    classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'com.bankmemory.RuneLiteRunner'
-    // Useful JVM args; adjust as needed
-    jvmArgs '-Xmx1024m', '-Djava.awt.headless=false'
-}
