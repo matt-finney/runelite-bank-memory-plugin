@@ -73,6 +73,10 @@ public class BankMemoryPlugin extends Plugin {
         BankMemoryPluginPanel pluginPanel = injector.getInstance(BankMemoryPluginPanel.class);
 
         BufferedImage icon = ImageUtil.getResourceStreamFromClass(getClass(), ICON);
+        if (icon == null) {
+            // Fallback for test environments or unexpected resource resolution issues
+            icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        }
         navButton = NavigationButton.builder()
                 .tooltip(Constants.BANK_MEMORY)
                 .icon(icon)
