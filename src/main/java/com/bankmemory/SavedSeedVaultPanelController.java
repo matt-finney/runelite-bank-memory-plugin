@@ -1,4 +1,4 @@
-package main.java.com.bankmemory;
+package com.bankmemory;
 
 import com.bankmemory.bankview.ItemListEntry;
 import com.bankmemory.data.BankItem;
