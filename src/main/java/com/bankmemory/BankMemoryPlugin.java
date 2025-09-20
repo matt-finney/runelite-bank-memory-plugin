@@ -15,7 +15,6 @@ import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.Player;
-import net.runelite.api.ItemContainerID;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
@@ -150,7 +149,7 @@ public class BankMemoryPlugin extends Plugin {
             ItemContainer bank = event.getItemContainer();
             dataStore.saveAsCurrentBank(BankSave.fromCurrentBank(worldType, accountIdentifier, bank, itemManager));
         }
-        if (containerId == ItemContainerID.SEED_VAULT) {
+        if (containerId == com.bankmemory.util.Constants.SEED_VAULT_CONTAINER_ID) {
             ItemContainer vault = event.getItemContainer();
             dataStore.saveAsCurrentSeedVault(BankSave.fromCurrentBank(worldType, accountIdentifier, vault, itemManager));
         }
