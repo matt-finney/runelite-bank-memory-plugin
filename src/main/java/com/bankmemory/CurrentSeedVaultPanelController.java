@@ -9,6 +9,7 @@ import com.bankmemory.data.BankSave;
 import com.bankmemory.data.BankWorldType;
 import com.bankmemory.data.PluginDataStore;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -100,6 +101,8 @@ public class CurrentSeedVaultPanelController {
                 int haValue = ic.getHaPrice() * i.getQuantity();
                 items.add(new ItemListEntry(ic.getName(), i.getQuantity(), icon, geValue, haValue));
             }
+            // Sort: seeds first (alphabetical), saplings last (alphabetical)
+            items.sort(seedVaultComparator());
         }
         SwingUtilities.invokeLater(() -> {
             if (shouldReset) {
@@ -124,6 +127,16 @@ public class CurrentSeedVaultPanelController {
 
     private boolean isItemDataNew(BankSave newSave) {
         return latestDisplayedData == null || !latestDisplayedData.getItemData().equals(newSave.getItemData());
+    }
+
+    private static Comparator<ItemListEntry> seedVaultComparator() {
+        return Comparator
+                .comparing((ItemListEntry e) -> isSapling(e.getName()) ? 1 : 0)
+                .thenComparing(e -> e.getName().toLowerCase());
+    }
+
+    private static boolean isSapling(String name) {
+        return name != null && name.toLowerCase().contains("sapling");
     }
 
     private class DataStoreListener extends AbstractDataStoreUpdateListener {
