@@ -115,6 +115,7 @@ public class SeedVaultDiffPanelController {
             items.add(new ItemListEntry(ic.getName(), i.getQuantity(), icon, geValue, haValue));
         }
 
+        items.sort(seedVaultComparator());
         SwingUtilities.invokeLater(() -> diffPanel.displayItems(items, keepListPosition));
     }
 
@@ -122,6 +123,16 @@ public class SeedVaultDiffPanelController {
         dataStore.removeListener(dataListener);
         lastBeforeSelection = null;
         lastAfterSelection = null;
+    }
+
+    private static java.util.Comparator<ItemListEntry> seedVaultComparator() {
+        return java.util.Comparator
+                .comparing((ItemListEntry e) -> isSapling(e.getName()) ? 1 : 0)
+                .thenComparing(e -> e.getName().toLowerCase());
+    }
+
+    private static boolean isSapling(String name) {
+        return name != null && name.toLowerCase().contains("sapling");
     }
 
     private class DataUpdateListener extends AbstractDataStoreUpdateListener {
